@@ -6,11 +6,15 @@ type MessageType = "success" | "error" | "warning" | "info" | null;
 
 const ResumeUploader = ({
   setParsedData,
+  setLoading,
+  loading,
 }: {
   setParsedData: (data: ResumeData | null) => void;
+  setLoading: (loading: boolean) => void;
+  loading: boolean;
 }) => {
   const [file, setFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [messageType, setMessageType] = useState<MessageType>(null);
 
