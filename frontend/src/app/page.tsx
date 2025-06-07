@@ -2,24 +2,17 @@
 import { useMemo, useState } from "react";
 import ResumeUploader from "@/components/resumeUploader";
 import ResumeAnalysisResult, { ResumeData } from "@/components/resumeAnalysisResult";
+import quotes from "@/utils/quotes";
+import TypingAnimation from '@/components/typingAnimation';
 
 export default function Home() {
   const [parsedData, setParsedData] = useState<ResumeData | null>(null);
   const [loading, setLoading] = useState(false);
-
-  const quotes = [
-    "“Success usually comes to those who are too busy to be looking for it.” – Henry David Thoreau",
-    "“Choose a job you love, and you will never have to work a day in your life.” – Confucius",
-    "“Opportunities don’t happen. You create them.” – Chris Grosser",
-    "“Your resume is not just a list of jobs, it's a story of who you are.”",
-  ];
-
   const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
 
   // Pick random animation when loading starts
   const animationType = useMemo(() => {
-    // const animations = ["morph", "wave", "dots", "pulse", "orbit"];
-    const animations = ["pulse"];
+    const animations = ["morph", "wave", "dots", "pulse", "orbit"];
     return animations[Math.floor(Math.random() * animations.length)];
   }, [loading]);
 
@@ -67,7 +60,14 @@ export default function Home() {
             </div>
           )}
 
-          <p className="text-lg text-gray-600 italic text-center max-w-lg">{randomQuote}</p>
+          <p className="text-lg text-gray-600 italic text-center max-w-lg">
+            <TypingAnimation
+              text={randomQuote}
+              speed={50}
+              loop={true}
+              cursorClassName="animate-ping text-pink-500"
+            />
+          </p>
         </div>
       )}
 
