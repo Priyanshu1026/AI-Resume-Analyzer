@@ -60,9 +60,9 @@ export default function Home() {
       <Header />
       <main>
         <Hero/>
-        <SampleResults/>
+        {/* <SampleResults/> */}
         <Features/>
-        <Stats/>
+        {/* <Stats/> */}
         <FinalCTA/>
       </main>
       <Footer/>
