@@ -4,7 +4,6 @@ import ResumeUploader from "@/components/resumeUploader";
 import ResumeAnalysisResult, { ResumeData } from "@/components/resumeAnalysisResult";
 import quotes from "@/utils/quotes";
 import TypingAnimation from '@/components/typingAnimation';
-import Header from "@/components/landingPage/header";
 
 export default function Home() {
   const [parsedData, setParsedData] = useState<ResumeData | null>(null);
@@ -13,14 +12,12 @@ export default function Home() {
 
   // Pick random animation when loading starts
   const animationType = useMemo(() => {
-    // const animations = ["wave"];
     const animations = ["morph", "wave", "dots", "pulse", "orbit"];
     return animations[Math.floor(Math.random() * animations.length)];
   }, [loading]);
 
   return (
     <main className="min-h-screen p-8">
-      <Header />
       <ResumeUploader
         setParsedData={setParsedData}
         setLoading={setLoading}

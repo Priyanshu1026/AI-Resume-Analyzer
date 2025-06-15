@@ -1,11 +1,9 @@
 "use client";
 import { useEffect } from "react";
-import Header from "@/components/landingPage/header";
 import Hero from "@/components/landingPage/hero";
 import Features from "@/components/landingPage/features";
 import Stats from "@/components/landingPage/stats";
 import FinalCTA from "@/components/landingPage/finalCTA";
-import Footer from "@/components/landingPage/footer"
 import SampleResults from "@/components/landingPage/analysis";
 export default function Home() {
   useEffect(() => {
@@ -57,7 +55,6 @@ export default function Home() {
   }, []);
   return (
     <>
-      <Header />
       <main>
         <Hero/>
         {/* <SampleResults/> */}
@@ -65,7 +62,6 @@ export default function Home() {
         {/* <Stats/> */}
         <FinalCTA/>
       </main>
-      <Footer/>
     </>
   );
 }

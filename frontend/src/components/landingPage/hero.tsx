@@ -81,25 +81,6 @@ const Hero = () => {
 
   return (
     <>
-      <style>
-        {`
-          @keyframes sparkleOut {
-            0% {
-              transform: scale(0) rotate(0deg);
-              opacity: 1;
-            }
-            50% {
-              transform: scale(1.2) rotate(180deg);
-              opacity: 0.8;
-            }
-            100% {
-              transform: scale(0.8) rotate(360deg);
-              opacity: 0;
-            }
-          }
-        `}
-      </style>
-
       <section className="hero relative overflow-hidden">
         <div className="floating-elements absolute inset-0">
           <div className="floating-element"></div>

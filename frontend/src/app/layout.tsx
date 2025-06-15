@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/styles/globals.css";
+import Header from "@/components/landingPage/header";
+import Footer from "@/components/landingPage/footer";
 
 // Load Inter font with a CSS variable
 const inter = Inter({
@@ -21,7 +23,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans antialiased`}>
+        <Header />
         {children}
+        <Footer />
       </body>
     </html>
   );
