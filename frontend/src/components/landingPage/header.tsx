@@ -14,7 +14,7 @@ const Header = () => (
           <div className="cube"></div>
           <div className="cube"></div>
         </div>
-        <div className="brand-cyber-glitch" id="brand16" data-text="Talent Tuner">Talent Tuner</div>
+        <div className="brand-cyber-glitch" id="brand16" data-text="Resumetrics">Resumetrics</div>
       </div>
 
       <ul className="nav-links flex space-x-6">
