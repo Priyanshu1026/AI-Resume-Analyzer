@@ -115,7 +115,7 @@ const Hero = () => {
               </div>
             </div> */}
 
-            <Link href="/" className="cta-button inline-flex items-center gap-2 mt-6 px-6 py-3 rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition">
+            <Link href="/analyze" className="cta-button inline-flex items-center gap-2 mt-6 px-6 py-3 rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition">
               <span>Analyze Your Resume</span>
               <span className="cta-arrow">→</span>
             </Link>

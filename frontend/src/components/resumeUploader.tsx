@@ -164,30 +164,29 @@ const ResumeUploader = ({
 
       {/* Show analyze + replace options if file is selected */}
       {file && (
-        <div className="flex flex-col sm:flex-row gap-4 mt-4">
+        <div className="flex flex-col sm:flex-row justify-center items-center gap-4 sm:gap-6 mt-4">
           <button
             onClick={analyzeResume}
             disabled={loading}
-            className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 disabled:opacity-50"
+            className="cta-button px-6 py-3 rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 disabled:opacity-50"
           >
             {loading ? "Analyzing..." : "Analyze Resume"}
           </button>
 
-          <button
+          <button 
             onClick={resetUpload}
-            className="px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300"
-          >
+            className="cta-button px-6 py-3 rounded-lg text-white bg-indigo-600 hover:bg-indigo-700">
             Upload Another
           </button>
         </div>
       )}
 
       {/* Message */}
-      {message && (
+      {/* {message && (
         <div className={`mt-4 p-3 rounded ${getMessageColor(messageType)} border`}>
           {message}
         </div>
-      )}
+      )} */}
     </>
   );
 };

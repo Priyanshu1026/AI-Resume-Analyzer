@@ -1,77 +1,67 @@
 "use client";
-import { useMemo, useState } from "react";
-import ResumeUploader from "@/components/resumeUploader";
-import ResumeAnalysisResult, { ResumeData } from "@/components/resumeAnalysisResult";
-import quotes from "@/utils/quotes";
-import TypingAnimation from '@/components/typingAnimation';
-
+import { useEffect } from "react";
+import Hero from "@/components/landingPage/hero";
+import Features from "@/components/landingPage/features";
+import Stats from "@/components/landingPage/stats";
+import FinalCTA from "@/components/landingPage/finalCTA";
+import SampleResults from "@/components/landingPage/analysis";
 export default function Home() {
-  const [parsedData, setParsedData] = useState<ResumeData | null>(null);
-  const [loading, setLoading] = useState(false);
-  const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+  useEffect(() => {
+    const anchorLinks = document.querySelectorAll('a[href^="#"]');
+    anchorLinks.forEach(anchor => {
+      anchor.addEventListener('click', (e) => {
+        e.preventDefault();
 
-  // Pick random animation when loading starts
-  const animationType = useMemo(() => {
-    const animations = ["morph", "wave", "dots", "pulse", "orbit"];
-    return animations[Math.floor(Math.random() * animations.length)];
-  }, [loading]);
+        const link = e.currentTarget as HTMLAnchorElement;
+        const href = link.getAttribute('href');
 
+        if (href) {
+          const target = document.querySelector(href);
+          if (target) {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        }
+      });
+    });
+
+
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.remove("opacity-0", "translate-y-8");
+        }
+      });
+    }, observerOptions);
+
+    document.querySelectorAll('.feature-card').forEach(card => {
+      card.classList.add("opacity-0", "translate-y-8", "transition-all", "duration-500");
+      observer.observe(card);
+    });
+
+    document.querySelectorAll('.cta-button').forEach(button => {
+      button.addEventListener('click', (e) => {
+        const target = e.currentTarget as HTMLElement;
+        target.style.transform = 'scale(0.95)';
+        setTimeout(() => {
+          target.style.transform = 'scale(1)';
+        }, 150);
+      });
+    });
+  }, []);
   return (
-    <main className="min-h-screen p-8">
-      <ResumeUploader
-        setParsedData={setParsedData}
-        setLoading={setLoading}
-        loading={loading}
-      />
-
-      {loading && (
-        <div className="flex flex-col items-center justify-center mt-10 space-y-6">
-          {animationType === "morph" && (
-            <div className="w-12 h-12 bg-blue-500 morph"></div>
-          )}
-
-          {animationType === "wave" && (
-            <div className="wave-container">
-              <div className="wave-bar"></div>
-              <div className="wave-bar"></div>
-              <div className="wave-bar"></div>
-              <div className="wave-bar"></div>
-              <div className="wave-bar"></div>
-            </div>
-          )}
-
-          {animationType === "dots" && (
-            <div className="bounce-dots">
-              <div className="dot"></div>
-              <div className="dot"></div>
-              <div className="dot"></div>
-            </div>
-          )}
-
-          {animationType === "pulse" && (
-            <div className="bg-blue-500 pulse"></div>
-          )}
-
-          {animationType === "orbit" && (
-            <div className="orbit-loader">
-              <div className="orbit-ring"></div>
-              <div className="orbit-ring"></div>
-              <div className="orbit-ring"></div>
-            </div>
-          )}
-
-          <p className="text-lg text-gray-600 italic text-center max-w-lg">
-            <TypingAnimation
-              text={randomQuote}
-              speed={50}
-              loop={true}
-              cursorClassName="animate-ping text-pink-500"
-            />
-          </p>
-        </div>
-      )}
-
-      {!loading && parsedData && <ResumeAnalysisResult data={parsedData} />}
-    </main>
+    <>
+      <main>
+        <Hero/>
+        {/* <SampleResults/> */}
+        <Features/>
+        {/* <Stats/> */}
+        <FinalCTA/>
+      </main>
+    </>
   );
 }
