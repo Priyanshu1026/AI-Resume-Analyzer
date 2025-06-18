@@ -42,10 +42,16 @@ const ResumeUploader = ({
       setMessage("Analyzing your resume...");
       setMessageType("info");
 
-      const res = await fetch("http://localhost:5000/api/resume/upload", {
+      // const res = await fetch("http://localhost:5000/api/resume/upload", {
+      //   method: "POST",
+      //   body: formData,
+      // });
+
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/resume/upload`, {
         method: "POST",
         body: formData,
       });
+
 
       const data = await res.json();
       if (res.ok && data.analysis) {
@@ -119,7 +125,7 @@ const ResumeUploader = ({
     setMessageType(null);
     if (fileInputRef.current) {
       fileInputRef.current.value = ""; // <-- THIS clears the input value
-  }
+    }
   };
 
   return (
@@ -173,7 +179,7 @@ const ResumeUploader = ({
             {loading ? "Analyzing..." : "Analyze Resume"}
           </button>
 
-          <button 
+          <button
             onClick={resetUpload}
             className="cta-button px-6 py-3 rounded-lg text-white bg-indigo-600 hover:bg-indigo-700">
             Upload Another

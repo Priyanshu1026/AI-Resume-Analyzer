@@ -1,11 +1,11 @@
-import express from "express";
-import multer from "multer";
-import { handleResumeUpload } from "../controllers/resumeController";
+// import express from "express";
+// import multer from "multer";
+// import { handleResumeUpload } from "../controllers/resumeController";
 
-const router = express.Router();
+// const router = express.Router();
 
-const upload = multer({ dest: "uploads/" }); // or memoryStorage()
+// const upload = multer({ dest: "uploads/" }); // or memoryStorage()
 
-router.post("/upload", upload.single("file"), handleResumeUpload);
+// router.post("/upload", upload.single("file"), handleResumeUpload);
 
-export default router;
+// export default router;
