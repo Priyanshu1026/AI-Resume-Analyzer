@@ -9,7 +9,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Talent Tuner",
+  title: "Resumetrics",
   description: "Analyze and improve your resume with AI-powered insights",
 };
 
