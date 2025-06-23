@@ -15,7 +15,12 @@ export interface ResumeData {
     institution: string;
     year: string;
   }[];
-  certifications: string[];
+  certifications: {
+    name: string;
+    issuer: string;
+    date: string;
+  }[];
+
   suggestedImprovements: string[];
 }
 const gradientColors = [
@@ -186,11 +191,16 @@ const ResumeAnalysisResult = ({ data }: { data: ResumeData }) => {
         <ul className="certifications-list">
           {isValidArray(data.certifications)
             ? data.certifications.map((cert, index) => (
-              <li key={index} className="certifications-item">{cert}</li>
+              <li key={index} className="certifications-item">
+                <p><strong>Name:</strong> {cert.name}</p>
+                <p><strong>Issuer:</strong> {cert.issuer}</p>
+                <p><strong>Date:</strong> {cert.date}</p>
+              </li>
             ))
             : <li className="certifications-na">N/A</li>}
         </ul>
       </div>
+
 
       <div className="improvements-container">
         <h3 className="improvements-title">Suggested Improvements</h3>
