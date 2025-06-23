@@ -14,7 +14,7 @@ const Header = () => (
           <div className="cube"></div>
           <div className="cube"></div>
         </div>
-        <div className="brand-cyber-glitch" id="brand16" data-text="Resumetrics">Resumetrics</div>
+        <Link href="/" className="brand-cyber-glitch" id="brand16" data-text="Resumetrics">Resumetrics</Link>
       </div>
 
       <ul className="nav-links flex space-x-6">
