@@ -47,7 +47,7 @@ export async function analyzeResume(text: string): Promise<ResumeAnalysis> {
       },
       // ...
     },
-    required: ["summary", "technicalSkills", "workExperience", "education"]
+    //required: ["summary", "technicalSkills", "workExperience", "education"]
   };
   
   // 2. FIX: Access generateContent via genAI.models.generateContent
