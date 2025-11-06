@@ -42,7 +42,7 @@ export async function analyzeResume(text: string): Promise<ResumeAnalysis> {
             duration: { type: Type.STRING },
             achievement: { type: Type.STRING, description: "One key quantifiable achievement from the role." }
           },
-          required: ["role", "company", "achievement"]
+          //required: ["role", "company", "achievement"]
         }
       },
       // ...
