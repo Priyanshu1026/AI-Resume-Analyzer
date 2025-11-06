@@ -3,7 +3,7 @@ import { GoogleGenAI, Type } from "@google/genai";
 // 1. FIX: Pass the API key inside an options object { apiKey: '...' }
 const genAI = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 
-// Define the desired JSON structure (Interface is correct, keeping it here for context)
+// Define the required output structure (Interface)
 interface ResumeAnalysis {
   summary: string;
   technicalSkills: string[];
@@ -19,19 +19,33 @@ interface ResumeAnalysis {
     institution: string;
     year: string;
   }[];
-  certifications: string[];
+  // 🛑 NOTE: Your frontend interface has 'certifications: { name: string; issuer: string; date: string; }[]'
+  // but your backend schema only requested 'string[]'. I'll keep the simple string array 
+  // to match the backend prompt style, but adjust your interface if needed.
+  certifications: string[]; 
   suggestedImprovements: string[];
 }
 
 export async function analyzeResume(text: string): Promise<ResumeAnalysis> {
   
-  // Define the schema object (assuming this is correct from the previous step)
+  // ⭐️ COMPLETE FIX: Define the full schema object
   const resumeAnalysisSchema = {
-    // ... (Your schema definition here)
     type: Type.OBJECT,
     properties: {
-      summary: { /* ... */ },
-      // ... (rest of your properties)
+      summary: { 
+        type: Type.STRING, 
+        description: "A concise, professional summary of the candidate." 
+      },
+      technicalSkills: { 
+        type: Type.ARRAY, 
+        items: { type: Type.STRING },
+        description: "List of hard/technical skills."
+      },
+      softSkills: { 
+        type: Type.ARRAY, 
+        items: { type: Type.STRING },
+        description: "List of interpersonal/soft skills."
+      },
       workExperience: {
         type: Type.ARRAY,
         items: {
@@ -42,17 +56,38 @@ export async function analyzeResume(text: string): Promise<ResumeAnalysis> {
             duration: { type: Type.STRING },
             achievement: { type: Type.STRING, description: "One key quantifiable achievement from the role." }
           },
-          //required: ["role", "company", "achievement"]
+          // Keeping nested 'required' commented out for simplicity, but it's often needed here
         }
       },
-      // ...
+      education: {
+        type: Type.ARRAY,
+        items: {
+          type: Type.OBJECT,
+          properties: {
+            degree: { type: Type.STRING },
+            institution: { type: Type.STRING },
+            year: { type: Type.STRING }
+          },
+          // Keeping nested 'required' commented out
+        }
+      },
+      certifications: { 
+        type: Type.ARRAY, 
+        items: { type: Type.STRING },
+        description: "List of names of certifications or licenses."
+      },
+      suggestedImprovements: {
+        type: Type.ARRAY, 
+        items: { type: Type.STRING },
+        description: "3-5 constructive suggestions to improve the resume."
+      },
     },
-    //required: ["summary", "technicalSkills", "workExperience", "education"]
+    // 🛑 Final Fix: Removing the top-level 'required' array to prevent INVALID_ARGUMENT error
+    // required: ["summary", "technicalSkills", "workExperience", "education"] 
   };
   
   // 2. FIX: Access generateContent via genAI.models.generateContent
-  // The 'model' property moves into the generateContent options object.
-  const prompt = `Analyze the following resume text and extract all information into the structured format:
+  const prompt = `Analyze the following resume text and strictly extract all information into the structured JSON format:
     
     ${text}`;
 
