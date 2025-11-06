@@ -22,27 +22,27 @@ interface ResumeAnalysis {
   // 🛑 NOTE: Your frontend interface has 'certifications: { name: string; issuer: string; date: string; }[]'
   // but your backend schema only requested 'string[]'. I'll keep the simple string array 
   // to match the backend prompt style, but adjust your interface if needed.
-  certifications: string[]; 
+  certifications: string[];
   suggestedImprovements: string[];
 }
 
 export async function analyzeResume(text: string): Promise<ResumeAnalysis> {
-  
+
   // ⭐️ COMPLETE FIX: Define the full schema object
   const resumeAnalysisSchema = {
     type: Type.OBJECT,
     properties: {
-      summary: { 
-        type: Type.STRING, 
-        description: "A concise, professional summary of the candidate." 
+      summary: {
+        type: Type.STRING,
+        description: "A concise, professional summary of the candidate."
       },
-      technicalSkills: { 
-        type: Type.ARRAY, 
+      technicalSkills: {
+        type: Type.ARRAY,
         items: { type: Type.STRING },
         description: "List of hard/technical skills."
       },
-      softSkills: { 
-        type: Type.ARRAY, 
+      softSkills: {
+        type: Type.ARRAY,
         items: { type: Type.STRING },
         description: "List of interpersonal/soft skills."
       },
@@ -71,13 +71,20 @@ export async function analyzeResume(text: string): Promise<ResumeAnalysis> {
           // Keeping nested 'required' commented out
         }
       },
-      certifications: { 
-        type: Type.ARRAY, 
-        items: { type: Type.STRING },
-        description: "List of names of certifications or licenses."
+      certifications: {
+        type: Type.ARRAY,
+        items: {
+          type: Type.OBJECT, // <-- Change this from Type.STRING
+          properties: {
+            name: { type: Type.STRING },
+            issuer: { type: Type.STRING },
+            date: { type: Type.STRING }
+          }
+        },
+        description: "List of Certifications/Courses with Name, Issuer, and Date. If any field is missing, return an empty string, NOT null."
       },
       suggestedImprovements: {
-        type: Type.ARRAY, 
+        type: Type.ARRAY,
         items: { type: Type.STRING },
         description: "3-5 constructive suggestions to improve the resume."
       },
@@ -85,9 +92,12 @@ export async function analyzeResume(text: string): Promise<ResumeAnalysis> {
     // 🛑 Final Fix: Removing the top-level 'required' array to prevent INVALID_ARGUMENT error
     // required: ["summary", "technicalSkills", "workExperience", "education"] 
   };
-  
+
   // 2. FIX: Access generateContent via genAI.models.generateContent
-  const prompt = `Analyze the following resume text and strictly extract all information into the structured JSON format:
+  const prompt = `Analyze the following resume text and strictly extract all information into the structured JSON format. 
+For the 'certifications' section, if the Issuer, Date, or Name is not explicitly visible or readily inferable from the resume text, 
+return that specific field as an **empty string ("")** instead of omitting the object or returning null. 
+Do not hallucinate any missing details.
     
     ${text}`;
 
@@ -100,19 +110,19 @@ export async function analyzeResume(text: string): Promise<ResumeAnalysis> {
     },
   });
 
-  const rawText = response.text; 
+  const rawText = response.text;
 
   if (!rawText) {
     console.error("Gemini API returned no text in the response:", response);
     // Throw an error that Vercel will catch and log as a 500
     throw new Error("Analysis failed: Gemini model returned no text or was blocked.");
   }
-  
+
   const jsonText = rawText.trim();
-  
+
   try {
     // We expect valid JSON, so cast the result
-    return JSON.parse(jsonText) as ResumeAnalysis; 
+    return JSON.parse(jsonText) as ResumeAnalysis;
   } catch (parseError) {
     console.error("Failed to parse JSON from model response:", jsonText, parseError);
     // Throw an error if the model returned malformed JSON
