@@ -42,28 +42,30 @@ const ResumeUploader = ({
       setMessage("Analyzing your resume...");
       setMessageType("info");
 
-      // const res = await fetch("http://localhost:5000/api/resume/upload", {
-      //   method: "POST",
-      //   body: formData,
-      // });
-
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/api/resume/upload`, {
         method: "POST",
         body: formData,
       });
 
-
       const data = await res.json();
+      
+      // 🟢 FIX START: Use data.analysis directly as it is now a JSON object 🟢
       if (res.ok && data.analysis) {
-        const match = data.analysis.match(/```json\s*([\s\S]*?)\s*```/);
-        if (!match || !match[1]) throw new Error("Invalid analysis format");
+        
+        // 🛑 PREVIOUSLY CRASHING CODE (REMOVED):
+        // const match = data.analysis.match(/```json\s*([\s\S]*?)\s*```/);
+        // if (!match || !match[1]) throw new Error("Invalid analysis format");
+        // const parsed = JSON.parse(match[1].trim());
 
-        const parsed = JSON.parse(match[1].trim());
-        setParsedData(parsed);
+        // Use the parsed object directly from the backend response
+        setParsedData(data.analysis); 
         setMessage("Resume analyzed successfully!");
         setMessageType("success");
-      } else {
+      } 
+      // 🟢 FIX END 🟢
+      else {
         setParsedData(null);
+        // Use data.message from the backend for error details
         setMessage(`Error: ${data.message || "Failed to analyze resume"}`);
         setMessageType("error");
       }
