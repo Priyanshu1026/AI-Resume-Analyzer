@@ -11,9 +11,19 @@ export const config = {
 };
 
 export default function handler(req: VercelRequest, res: VercelResponse) {
+    
+    // 🛡️ FIX: CORS Headers and OPTIONS Preflight Handling
     res.setHeader("Access-Control-Allow-Origin", "https://resumetrics.vercel.app");
-    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS"); // Include OPTIONS
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization"); // Common headers
+    res.setHeader("Access-Control-Allow-Credentials", "true"); 
+
+    if (req.method === "OPTIONS") {
+        // Handle preflight request and send success response
+        return res.status(200).end(); 
+    }
+    // ---------------------- END CORS FIX ----------------------
+
     if (req.method !== "POST") {
         return res.status(405).json({ message: "Method not allowed" });
     }
@@ -21,6 +31,9 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
     const form = formidable({ uploadDir: "/tmp", keepExtensions: true });
 
     form.parse(req, async (err, fields, files) => {
+        // Set CORS headers again inside the callback for error responses too
+        res.setHeader("Access-Control-Allow-Origin", "https://resumetrics.vercel.app");
+
         try {
             if (err || !files.file) {
                 return res.status(400).json({ message: "No file uploaded" });
@@ -31,9 +44,10 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
             const pdfData = await pdfParse(buffer);
             const extractedText = pdfData.text;
 
-            const analysis = await analyzeResume(extractedText);
+            // This will call the fixed analyzeResume function
+            const analysis = await analyzeResume(extractedText); 
 
-            // Delete file (optional, since /tmp is ephemeral on Vercel)
+            // Clean up the temporary file
             fs.unlinkSync(uploadedFile.filepath);
 
             return res.status(200).json({
@@ -46,7 +60,8 @@ export default function handler(req: VercelRequest, res: VercelResponse) {
             });
         } catch (e: any) {
             console.error("Upload error:", e);
-            return res.status(500).json({ message: "Failed to process resume" });
+            // This 500 status should now be correctly passed back to the frontend
+            return res.status(500).json({ message: "Failed to process resume", error: e.message || "Unknown error" });
         }
     });
 }
